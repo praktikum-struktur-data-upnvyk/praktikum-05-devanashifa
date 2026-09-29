@@ -27,7 +27,6 @@
 // -----------------------------------------------------------------------------
 
 #include "student.h"
-
 #include <iomanip>
 #include <iostream>
 #include <string>
@@ -71,21 +70,73 @@ string display(Stack& s) {
 
 // SOAL 1
 bool push(Stack& s, int nilai) {
-    return false;
+    Node *baru = new Node;
+
+    baru->data = nilai;
+    baru->next = s.top;
+    s.top = baru;
+    return true;
+    
 }
 
 // SOAL 2
 bool pop(Stack& s, int& nilai) {
-    return false;
+    if(s.top == nullptr){
+        return false;
+    }
+    Node *hapus = s.top;
+    nilai = hapus->data;
+    s.top = hapus->next;
+    delete hapus;
+    return true;
 }
 
 // SOAL 3
 void clear(Stack& s) {
+    while(s.top != nullptr){
+        Node *hapus = s.top;
+        s.top = s.top->next;
+        delete hapus;
+    }
 }
 
 // SOAL 4
 bool kurungSeimbang(const string& ekspresi) {
-    return false;
+    Stack s;
+    inisialisasi(s);
+
+    for(char karakter : ekspresi){
+        if(karakter == '(' ||
+           karakter == '[' ||
+           karakter == '{'){
+
+            push(s, static_cast<int>(karakter));
+        }
+        else if(karakter == ')' ||
+                karakter == ']' ||
+                karakter == '}'){
+
+            int buka;
+
+            if(!pop(s, buka)){
+                clear(s);
+                return false;
+            }
+            if((karakter == ')' && buka != '(') ||
+               (karakter == ']' && buka != '[') ||
+               (karakter == '}' && buka != '{')){
+
+                clear(s);
+                return false;
+            }
+        }
+    }
+
+    bool hasil = isEmpty(s);
+
+    clear(s);
+
+    return hasil;
 }
 
 // =============================================================================
